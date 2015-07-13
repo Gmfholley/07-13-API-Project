@@ -102,7 +102,7 @@ end
 get "/:class_name/:action/:x" do
   home_menu_nav_variables
   @class_name = menu_to_class_name[params["class_name"]]
-  
+
   case params["action"]
   when "update"
     @m = @class_name.create_from_database(params["x"].to_i)
