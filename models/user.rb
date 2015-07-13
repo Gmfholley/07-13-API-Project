@@ -11,5 +11,24 @@ class User
   end
   
   
+  # get the Array of Collaborator objects for this Assignment
+  #
+  # returns an Array
+  def assignments
+    collaborators = Collaborator.where_match("user_id", id, "==")
+    assignments = []
+    collaborators.each do |collaborator|
+      assignments << Assignment.create_from_database(collaborator.assignment_id)
+    end
+    assignments
+  end
+  
+  # returns a Boolean indicating if there are any collaborators
+  #
+  # returns Boolean
+  def assignments?
+    assignments.length > 0
+  end
+  
   
 end
