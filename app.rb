@@ -6,9 +6,13 @@ require 'sinatra'                # gem that handles html views & controller
 require 'sinatra/reloader'       # reloads sinatra without reloading
 require 'sinatra/json'           # converts to JSON
 require 'active_support'         # all kinds of goodies! including blank?, underscore, humanize, pluralize
+require 'httparty'
+
 require 'active_support/core_ext/string/filters.rb'
 require 'active_support/core_ext/object/blank.rb'
 require 'active_support/inflector.rb'
+
+set :bind, '192.168.1.69'
 
 
 # Database set up modules and helper classes required by models
@@ -35,6 +39,7 @@ require_relative 'controllers/defined_menus.rb'
 require_relative 'controllers/menu_controller.rb'
 require_relative 'controllers/create_controller.rb'
 require_relative 'controllers/local_variable_methods.rb'
+require_relative 'controllers/api_controller.rb'
 
 # views are in views folder
 
@@ -116,6 +121,17 @@ get "/:class_name/:action/:x" do
     end
     table_menu_local_variables("show", false)
     erb :menu
+  
+  when "show"
+    @m = @class_name.create_from_database(params["x"].to_i)
+    if @class_name == User
+      @associated_objects = [@m.collaborators]
+    elsif @class_name == Assignment
+      @associated_objects = [@m.collaborators, @m.links]
+    else
+      @associated_objects = []
+    end
+    erb :show
   else
     erb :not_appearing
   end
@@ -123,5 +139,6 @@ get "/:class_name/:action/:x" do
 end
 
 get "/:not_listed" do
+  home_menu_nav_variables
   erb :not_appearing
 end
