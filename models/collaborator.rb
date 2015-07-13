@@ -8,12 +8,18 @@ class Collaborator
     @id = args[:id] || args["id"]
     @assignment_id = ForeignKey.new(id: args["assignment_id"], class_name: Assignment)
     @user_id = ForeignKey.new(id: args["user_id"], class_name: User)
-    
-    
-    @assignment_name = args["assignment_name"]
-    @user_name = args["user_name"]
+    @assignment_name = args["assignment_name"] || set_assignment_name
+    @user_name = args["user_name"] || set_user_name
     @errors = []
     post_initialize
+  end
+  
+  def set_assignment_name
+    return assignment.name
+  end
+  
+  def set_user_name
+    return user.name
   end
   
   # returns the Assignment Foreign Key object
