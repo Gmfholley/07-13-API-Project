@@ -13,6 +13,11 @@ class Assignment
     @errors = []
   end
   
+  def display_fields
+    ["name", "description", "where_stored"]
+  end
+  
+  
   # get the Array of Collaborator objects for this Assignment
   #
   # returns an Array
