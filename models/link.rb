@@ -2,7 +2,7 @@ class Link
   include DatabaseConnector
   
   attr_accessor :description, :where_stored, :name
-  attr_reader :assignment_name, :assignment_id
+  attr_reader :assignment_name, :assignment_id, :errors, :id
   
   def initialize(args={})
     @id = args[:id] || args["id"]
