@@ -1,0 +1,186 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+body {
+  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  text-align: center;
+  height: 80%;
+  background: #FFFFFF;
+  line-height: 2.5;
+}
+
+.large {
+  margin: 0px;
+  padding-bottom: 20px;
+  font-size: 120%;
+}
+
+#pop-up-menu {
+  position: absolute;
+  width: 200px;
+  top: 0px;
+  right: 25px;
+}
+
+.pop-up-menu-hidden {
+  height: 0px;
+  overflow: hidden;
+  -webkit-transition: height 1s; /* Safari */
+  transition: height 1s;
+}
+
+.pop-up-menu-shown {
+  height: 220px;
+  overflow: hidden;
+  -webkit-transition: height 1s; /* Safari */
+  transition: height 1s;
+}
+
+
+
+/*remove default ul and li behavior */
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+li {
+  padding: 5px 0px;
+  line-height: 1em;
+  margin: 0px;
+  vertical-align: center;
+  height: 45px;
+}
+
+nav ul {
+  text-align: center;
+}
+
+nav li {
+  border: white 1px solid;
+}
+
+#primary {
+  padding: 20px;
+  line-height: 1;
+}
+
+form {
+  text-align: left;
+  padding: 10px;
+  line-height: 2.5;
+}
+
+
+#primary table {
+  text-align: left;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+footer {
+  margin-top: 100px;  
+}
+
+#menu-icon {
+  height: 24px;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.padding-all {
+  padding: 10px;
+}
+
+.padding-left-right {
+  padding-left: 10px;
+  padding-right: 10px; 
+}
+
+.no-underline {
+  text-decoration: none;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.hover-underline:hover {
+  text-decoration: underline;
+}
+
+.white {
+  color: white;
+}
+
+.first-color {
+  color: #0D9CD4; /*blue*/
+}
+
+.first-color-border {
+  border: 1px #0D9CD4 solid;
+}
+
+.first-color-background {
+  background: #0D9CD4; /*blue*/
+}
+
+/*color for alternate rows of the table*/
+/*make this complimentary to the first-color*/
+.alt-background {
+  background: #BEEBEB; /*light blue */
+}
+
+.second-color {
+  color: #0FF677;
+}
+
+.second-color-background {
+  background: #0FF677;
+}
+
+.second-color-visited:visited {
+  color: #0FF677;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+@media (min-width: 800px) {
+  #pop-up-menu {
+    height: auto;
+    width: 100%;
+    position: static;
+  }
+  
+  #menu-icon {
+    display: none;
+  }
+  
+  .pop-up-menu li {
+    width: 20%;
+    border-bottom: none;
+  }
+  
+  .left {
+    float: left;
+  }
+}
