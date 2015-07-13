@@ -53,6 +53,17 @@ module DefinedMenus
     create_menu
   end
   
+  # returns a Menu of all the class's objects
+  #
+  # returns a Menu
+  def create_menu_from_object_list(array_of_objects, action)
+    create_menu = Menu.new("")
+    array_of_objects.each_with_index do |object, x|
+      create_menu.add_menu_item({user_message: get_object_display_message(object), method_name: "#{object.class}/#{action}/#{object.id}"})
+    end
+    create_menu
+  end
+  
   # returns object's display_fields values
   #
   # returns an Array of values
