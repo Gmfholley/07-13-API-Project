@@ -72,6 +72,44 @@ class Collaborator
     ["user_name", "assignment_name"]
   end
   
+  # returns an ExerciseObject that matches this date, person, and type
+  #
+  # returns an ExerciseObject
+  def this_user_and_assignment
+    rec = CONNECTION.execute("SELECT * FROM #{table} WHERE user_id = #{user.id} AND assignment_id = #{assignment.id};").first
+    if rec.blank?
+      Collaborator.new
+    else
+      Collaborator.new(rec)
+    end
+  end
+  
+  # returns Boolean to indicate if this date-person-exercise type is a duplicate of a different id in the datbase
+  #
+  # returns Boolean
+  def duplicate_user_assignment?
+    self.id != this_user_and_assignment.id && this_user_and_assignment.id != ""
+  end
+  
+  
+  # returns a Boolean indicating if data is valid to save into database
+  #
+  # returns a Boolean
+  def valid?
+    validate_field_types
+    # only do a database query if you have good enough data to check the database
+    if @errors.length == 0
+      if duplicate_user_assignment?
+        @errors << 
+          {message: 
+          "The database already has this user and assignment combination. It is record 
+          #{this_user_and_assignment.id}. Change this assignment or user or the assignment or user of that record.", 
+          variabe: "assignment_id, user_id"}
+      end
+    end   
+    @errors.length == 0
+  end
+  
   # over-writes the all database_connector method for efficiency because this object has four foreign keys
   # returns all ExerciseEvents
   #
@@ -81,7 +119,7 @@ class Collaborator
     "SELECT collaborators.id, collaborators.user_id, users.name AS user_name, collaborators.assignment_id, assignments.name AS assignment_name
     FROM collaborators
     JOIN assignments ON assignments.id == collaborators.assignment_id
-    JOIN users ON users.id == collaborators.users_id
+    JOIN users ON users.id == collaborators.user_id
     ORDER BY users.name ASC;"
     
     results = run_sql(query_string)
@@ -99,7 +137,7 @@ class Collaborator
     "SELECT collaborators.id, collaborators.user_id, users.name AS user_name, collaborators.assignment_id, assignments.name AS assignment_name
     FROM collaborators
     JOIN assignments ON assignments.id == collaborators.assignment_id
-    JOIN users ON users.id == collaborators.users_id
+    JOIN users ON users.id == collaborators.user_id
     WHERE collaborators.id = #{id};"
     
     rec = run_sql(query_string).first
