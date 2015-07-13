@@ -50,6 +50,44 @@ class Link
     ["name", "assignment_name", "description", "where_stored"]
   end
   
+  # over-writes the all database_connector method for efficiency because this object has four foreign keys
+  # returns all ExerciseEvents
+  #
+  # returns Array of Objects
+  def self.all
+    query_string = 
+    "SELECT links.id, links.name, links.description,    
+            links.assignment_id, links.where_stored, assignments.name AS assignment_name
+    FROM links
+    JOIN assignments ON assignments.id == links.assignment_id
+    ORDER BY links.id ASC;"
+    
+    results = run_sql(query_string)
+    self.as_objects(results)
+  end
+  
+  # over-writes the all database_connector method for efficiency because this object has four foreign keys
+  # returns this ExerciseEvent
+  #
+  # id - Integer of the id
+  #
+  # returns ExerciseEvent
+  def self.create_from_database(id)
+    query_string = 
+    "SELECT links.id, links.name, links.description,    
+            links.assignment_id, links.where_stored, assignments.name AS assignment_name
+    FROM links
+    JOIN assignments ON assignments.id == links.assignment_id
+    WHERE links.id = #{id};"
+    
+    rec = run_sql(query_string).first
+    if rec.nil?
+      self.new
+    else
+      self.new(rec)
+    end
+  end
+  
 end
 
 # - id
