@@ -16,9 +16,7 @@ get "/api/assignments/:id" do
   @a_hash["links"] = []
   @assignment.links.each do |link|
     @a_hash["links"] << link.self_hash
-  end
-  
-  
+  end  
   json @a_hash
 end
 
@@ -32,7 +30,6 @@ get "/api/links/:id" do
   @link = Link.create_from_database(params["id"]).self_hash
   json @link
 end
-
 
 get "/api/users" do
   @users = User.all_hash
@@ -48,4 +45,11 @@ get "/api/users/:id" do
     @a_hash["assignments"] << assignment.self_hash
   end
   json @a_hash
+end
+
+get "/api/:class_name/create" do
+  class_variable(params["class_name"])
+  @m = @class_name.new(params["create_form"])
+  @m.save_record
+  json @m.errors
 end
