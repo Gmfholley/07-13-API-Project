@@ -58,7 +58,6 @@ end
 # Do something to this object in the class
 
 get "/:class_name/:action/:x" do
-  binding.pry
   home_menu_nav_variables
   @class_name = menu_to_class_name[params["class_name"]]
 
