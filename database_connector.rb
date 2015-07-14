@@ -79,11 +79,17 @@ module DatabaseConnector
 
     # returns all records in database
     #
-    # returns Array of a Hash of the resulting records
+    # returns Array of Objects of the resulting records
     def all
       self.as_objects(CONNECTION.execute("SELECT * FROM #{table_name};"))
     end
     
+    # returns all records in database
+    #
+    # returns Array of Objects of the resulting records
+    def all_hash
+      CONNECTION.execute("SELECT * FROM #{table_name};")
+    end
     
     # returns object if exists or false if not
     #
@@ -93,7 +99,7 @@ module DatabaseConnector
       if rec.nil?
         false
       else
-        self.new(r)
+        self.new(rec)
       end
     end
     
@@ -211,6 +217,18 @@ module DatabaseConnector
   # None
   def self.included(base)
     base.extend ClassDatabaseConnector
+  end
+  
+  # returns a hash of the self with all instance variables
+  #
+  # returns a Hash
+  def self_hash
+    hash = {}
+    hash["id"] = self.send("id")
+    display_fields.each do |var|
+      hash[var] = self.send(var)
+    end
+    hash
   end
   
   # returns the table name - the plural of the object's class
