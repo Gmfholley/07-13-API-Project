@@ -30,5 +30,9 @@ class User
     assignments.length > 0
   end
   
+  def self.ok_to_delete?(id)
+    Collaborator.where_match("user_id", id, "==").length == 0
+  end
+  
   
 end

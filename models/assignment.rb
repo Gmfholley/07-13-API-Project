@@ -18,6 +18,10 @@ class Assignment
   end
   
   
+  def self.ok_to_delete?(id)
+    Collaborator.where_match("assignment_id", id, "==").length == 0 && Link.where_match("assignment_id", id, "==").length == 0
+  end
+  
   # get the Array of Collaborator objects for this Assignment
   #
   # returns an Array
