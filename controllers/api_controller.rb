@@ -30,6 +30,16 @@ get "/api/links/:id" do
   json @link
 end
 
+get "/api/collaborators" do
+  @collaborators = Collaborator.all_hash
+  json @collaborators
+end
+
+get "/api/collaborators/:id" do
+  @collaborator = Collaborator.create_from_database(params["id"]).self_hash
+  json @collaborator
+end
+
 get "/api/users" do
   @users = User.all_hash
   json @users
@@ -50,5 +60,17 @@ get "/api/:class_name/submit" do
   class_variable(params["class_name"])
   @m = @class_name.new(params["create_form"])
   @m.save_record
-  json @m.errors
+  hash = @m.self_hash
+  hash["errors"] = @m.errors  
+  json hash
+end
+
+get "/api/:class_name/delete/:x" do
+  class_variable(params["class_name"])
+  if @class_name.delete_record(params["x"].to_i)
+    @all = @class_name.all_hash
+    json @all
+  else
+    json []
+  end
 end
