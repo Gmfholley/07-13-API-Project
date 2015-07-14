@@ -19,8 +19,8 @@ I have four models and four tables.
  - description
  - where_stored
 
-| id | name | `assignment_id` | description | `where_stored` |
-|----|------|-------------|---------------|
+| id | name | assignment_id | description | `where_stored` |
+|----|------|-------------|---------------|----------------|
 | INTEGER PRIMARY KEY | TEXT NOT NULL | INTEGER FOREIGN KEY NOT NULL | TEXT NOT NULL | TEXT NOT NULL |
 | 1 | "What is CRUD?" | 1 | "Blog entry describing the first assignment" | "http://myblog.com" |
 
