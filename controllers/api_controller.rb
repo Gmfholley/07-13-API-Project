@@ -20,7 +20,6 @@ get "/api/assignments/:id" do
   json @a_hash
 end
 
-
 get "/api/links" do
   @links = Link.all_hash
   json @links
@@ -47,7 +46,7 @@ get "/api/users/:id" do
   json @a_hash
 end
 
-get "/api/:class_name/create" do
+get "/api/:class_name/submit" do
   class_variable(params["class_name"])
   @m = @class_name.new(params["create_form"])
   @m.save_record

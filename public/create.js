@@ -12,7 +12,7 @@ function submit_form_using_ajax(event){
   }
   var queryString = kvpairs.join("&");
   
-  var url = "/api/assignment/create" + "?" + queryString;
+  var url = "/api" + form.getAttribute("action") + "?" + queryString;
   
   request.open("get", url);
   
