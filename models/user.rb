@@ -18,7 +18,7 @@ class User
     collaborators = Collaborator.where_match("user_id", id, "==")
     assignments = []
     collaborators.each do |collaborator|
-      assignments << Assignment.create_from_database(collaborator.assignment_id)
+      assignments << Assignment.create_from_database(collaborator.assignment.id)
     end
     assignments
   end
