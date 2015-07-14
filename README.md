@@ -2,24 +2,27 @@
 
 The purpose of this API is to provide a data service and basic CRUD functionality to my Assignments models.  The API returns JSON.  Sinatra is currently used to handle requests/responses from the client.  My model is built using Ruby and a gem called SQLite3, which allows Ruby to interact with SQLite, a relational database management system.
 
+
+#Models
+
 I have four models and four tables.
 
 
-#Assignment
+###Assignment
 
 | id | name | description | where_stored |
 |----|------|-------------|---------------|
 | INTEGER PRIMARY KEY | TEXT NOT NULL | TEXT NOT NULL | TEXT NOT NULL |
 | 1 | "API Assignments Project" | "Create a data service and basic CRUD functionality for assignments" | "here, at Github" |
 
-#Link
+###Link
 
 | id | name | assignment_id | description | `where_stored` |
 |----|------|-------------|---------------|----------------|
 | INTEGER PRIMARY KEY | TEXT NOT NULL | INTEGER FOREIGN KEY NOT NULL | TEXT NOT NULL | TEXT NOT NULL |
 | 1 | "What is CRUD?" | 1 | "Blog entry describing the first assignment" | "http://myblog.com" |
 
-#Collaborator
+###Collaborator
 
 | id | `assignment_id` | user_id |
 |----|------|-------------|
@@ -27,7 +30,7 @@ I have four models and four tables.
 | 1 | 1 | 2|
 
 
-#User 
+###User 
 
 | id | name |
 |----|------|
@@ -64,6 +67,8 @@ Assignment and User have some instance methods to check if they have collaborato
   end
 ```
 
+###DatabaseConnector Module
+
 Each of the models have instance and class database methods provided by the DatabaseConnector Module.
 
 The API returns JSON, and Sinatra can only convert hashes into JSON.  So a method to convert objects into hashes is included in the DatabaseConnector module.
@@ -94,6 +99,8 @@ The instance method is called `self_hash` and cycles through each of the display
     hash
   end
 ```
+
+#Sinatra Controllers
 
 The basic CRUD controller is found in the `main_controller.rb` file.  A menu structure with helper classes (Menu, MenuItem, and MethodToCall) are all in the same folder.  These menu structures allow you to use the same two erb files (create and menu) for all CRUD functions of any model that has the DatabaseConnector Module included. 
 
@@ -126,7 +133,7 @@ Then you need to tell the controller how to convert that preferred url name to t
 
 Having done that, you're done!  You can run Sinatra and get a web UX for basic CRUD operations on your model.
 
-##API
+#API Controllers
 
 The CRUD operations with web UX above are all handled with requests that return complete html pages. The API, instead, uses AJAX and returns JSON.  This API duplicates the CRUD functionality above.
 
