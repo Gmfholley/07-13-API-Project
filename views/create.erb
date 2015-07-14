@@ -15,7 +15,7 @@ Objects must have the DatabaseConnector module included and must have Foreign Ke
   <!--Show error messages -->
   <div id="message"><%= get_list_html_for_errors(@m) %></div>
 
-  <form id="form" action="/<%=params["class_name"]%>/submit">
+  <form id="form" data-class=<%= @class_name.to_s.downcase %> action="/<%=params["class_name"]%>/submit">
     <input type= "hidden" name = create_form[id] value = "<%= @m.id %>">
   
     <!-- Show all non-foreign keys in an input field -->
