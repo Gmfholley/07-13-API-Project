@@ -11,16 +11,19 @@ class User
   end
   
   
-  # get the Array of Collaborator objects for this Assignment
+  # get the Array of Assignment objects for this Assignment
   #
   # returns an Array
   def assignments
-    collaborators = Collaborator.where_match("user_id", id, "==")
-    assignments = []
-    collaborators.each do |collaborator|
-      assignments << Assignment.create_from_database(collaborator.assignment.id)
-    end
-    assignments
+    query_string = 
+    "SELECT assignments.id AS id, assignments.name AS name, assignments.description AS description,    
+            assignments.where_stored AS where_stored
+    FROM collaborators
+    JOIN assignments ON assignments.id == collaborators.assignment_id
+    WHERE collaborators.user_id = #{id};"
+    
+    rec = run_sql(query_string)
+    Assignment.as_objects(rec)
   end
   
   # returns a Boolean indicating if there are any collaborators

@@ -22,11 +22,18 @@ class Assignment
     Collaborator.where_match("assignment_id", id, "==").length == 0 && Link.where_match("assignment_id", id, "==").length == 0
   end
   
-  # get the Array of Collaborator objects for this Assignment
+  
+  # get the Array of User objects for this assignments collaborators
   #
   # returns an Array
   def collaborators
-    Collaborator.where_match("assignment_id", id, "==")
+    query_string = 
+    "SELECT users.id AS id, users.name AS name
+    FROM collaborators
+    JOIN users ON users.id == collaborators.user_id
+    WHERE collaborators.assignment_id = #{id};"
+    rec = run_sql(query_string)
+    User.as_objects(rec)
   end
   
   # get the Array of Collaborator objects for this Assignment
