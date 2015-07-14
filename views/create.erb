@@ -6,6 +6,8 @@ Objects must have the DatabaseConnector module included and must have Foreign Ke
  @non_foreign_key_fields - An Array of the field names of non-foreign keys. 
 -->
 
+<script src="/create.js" type="text/javascript"></script>
+
 <div id="primary">
   
   <h3>Enter the variables of the <%= @class_name %>.</h3>
@@ -13,7 +15,7 @@ Objects must have the DatabaseConnector module included and must have Foreign Ke
   <!--Show error messages -->
   <div id="message"><%= get_list_html_for_errors(@m) %></div>
 
-  <form action="/<%=params["class_name"]%>/submit">
+  <form id="form" action="/<%=params["class_name"]%>/submit">
     <input type= "hidden" name = create_form[id] value = "<%= @m.id %>">
   
     <!-- Show all non-foreign keys in an input field -->
@@ -22,7 +24,7 @@ Objects must have the DatabaseConnector module included and must have Foreign Ke
     <!--Show all foreign keys in a select field -->
     <%= get_list_html_for_foreign_key_fields(@m) %>
     <br>
-    <input type = "submit" value = "Submit <%= params["class_name"].humanize.downcase %>" class ="submit_button">
-
+    <input type = "submit" value = "Submit <%= params["class_name"].humanize.downcase %> to router" class ="submit_button">
+    <input id="AJAX-submit" type = "submit" value = "Submit <%= params["class_name"].humanize.downcase %> without a page reload using AJAX" class ="submit_button">
   </form>
 </div>
