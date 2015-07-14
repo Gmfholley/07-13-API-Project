@@ -1,6 +1,29 @@
 
 
-<% @m.display_fields.each do |field|%>
-    <%= values << object.send(field) %>
+
+
+<div id = "primary">
+  
+  <div class="message"><p><%= @message %></p></div>
+  
+  
+    <!-- Show all non-foreign keys in an input field -->
+    <%= get_list_html_for_non_foreign_key_fields_plus_special_date(@m, []) %>
+
+    <!--Show all foreign keys in a select field -->
+    <%= get_list_html_for_foreign_key_fields(@m) %>
+    
+  
+
+
+
+<% @associated_objects.each do |objects| %>
+<%     @menu = create_menu_from_object_list(objects, "show") %>
+<%     @with_links = true %>
+<%    @html_type = "get_table_html_for_all_menu_items" %>
+    <%= self.method(@html_type).call(@menu, @with_links) %>
+    <br>
+    <br>
 <% end %>
 
+</div>
