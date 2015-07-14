@@ -128,11 +128,9 @@ Having done that, you're done!  You can run Sinatra and get a web UX for basic C
 
 ##API
 
-The CRUD operations with web UX above are all handled with requests that return complete html pages.  
+The CRUD operations with web UX above are all handled with requests that return complete html pages. The API, instead, uses AJAX and returns JSON.  This API duplicates the CRUD functionality above.
 
-The API, instead, uses AJAX.
-
-API request controllers are found in the `api_controller.rb` file.  This API duplicates the CRUD functionality above.  But instead of returning html pages, it returns JSON.
+API request controllers are found in the `api_controller.rb` file.  
 
 Here is an example of an API controller request to return all the link objects and just one link by its id.  The objects are prepared in Hash form and the return is 'json ????'.  The json prefix to the return line is a Sinatra command that converts the Hashes into JSON.
 
