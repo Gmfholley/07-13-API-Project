@@ -6,10 +6,10 @@ I have four models and four tables.
 
 
 #Assignment
-id | name | description | where_stored
--- | ---- | ----------- | -------------
-INTEGER PRIMARY KEY | TEXT NOT NULL | TEXT NOT NULL | TEXT NOT NULL
-1 | API Assignments Project | Create a data service and basic CRUD functionality for assignments | here, at Github
+id | name | description | where_stored |
+-- | ---- | ----------- | ------------- |
+INTEGER PRIMARY KEY | TEXT NOT NULL | TEXT NOT NULL | TEXT NOT NULL |
+1 | API Assignments Project | Create a data service and basic CRUD functionality for assignments | here, at Github |
 
 
 
