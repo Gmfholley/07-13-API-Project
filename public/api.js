@@ -72,12 +72,15 @@ function all_classes() {
   return ["Assignment", "User", "Link", "Collaborator"]
 }
 
+function return_content_div(){
+    return document.getElementById("contents");
+}
 
 // returns the content div to which everything should be added
 //
 // returns a Div Element
 function empty_and_return_content_div(){
-  var content = document.getElementById("contents");
+  var content = return_content_div();
   content.innerHTML="";
   return content;
 }
@@ -88,7 +91,7 @@ function empty_and_return_content_div(){
 function select_element_with_options_for_each_class() {
   var s = document.createElement("select");
   s.setAttribute("id", "class-name-selector");
-  
+  s.style.fontSize = "100%";
   all = all_classes();
   for (i = 0; i < all.length; i ++) {
     
@@ -125,7 +128,7 @@ function input_field(){
   input.setAttribute("id", "input-id");
   input.setAttribute("placeholder", "Type in an optional id number here.");
   input.setAttribute('size',input.getAttribute('placeholder').length);
-  input.setAttribute("font-size", "100%");
+  input.style.fontSize = "100%";
   return input;
 }
 
@@ -199,22 +202,10 @@ function request_json_for_class_and_optional_id(){
 }
 
 
-
-
-function create_or_update_interface(){
-  toggle_class_name("selected", [this, document.getElementsByClassName("selected")[0]]);
-  var content = empty_and_return_content_div();
-
-  content.appendChild(select_element_with_options_for_each_class());
-  document.getElementById("class-name-selector").addEventListener("change", create_or_update_interface)
-  content.appendChild(input_field());
-  var submit = document.createElement("button");
-  submit.innerHTML = "Get Record"
-  submit.addEventListener("click", request_json_and_fill_in_object_fields);
-  content.appendChild(submit);
-  
-  content.appendChild(create_form());
-//create dummy request to get a json object so you can create html fields for them
+function request_object_and_create_class_html_inputs(){
+  remove_children("form");
+  add_message_to_form();
+  document.getElementById("form").action= "/" + get_selected_class_name().toLowerCase() + "/submit"
   var request = new XMLHttpRequest();
   request.open("get", get_url_this_class() + "/0");
   request.responseType = "json";
@@ -227,11 +218,38 @@ function create_or_update_interface(){
     var submit_all = document.createElement("button");
     submit_all.innerHTML = "Submit"
     submit_all.addEventListener("click", submit_form_using_ajax);
-    
+    var content = return_content_div();
     content.appendChild(submit_all);
     content.appendChild(display_div_to_display_json());
   });
   request.send();
+}
+
+function create_or_update_interface(){
+  toggle_class_name("selected", [this, document.getElementsByClassName("selected")[0]]);
+  var content = empty_and_return_content_div();
+
+  content.appendChild(select_element_with_options_for_each_class());
+  document.getElementById("class-name-selector").addEventListener("change", request_object_and_create_class_html_inputs)
+  content.appendChild(input_field());
+  var submit = document.createElement("button");
+  submit.innerHTML = "Get Record"
+  submit.addEventListener("click", request_json_and_fill_in_object_fields);
+  content.appendChild(submit);
+  
+  content.appendChild(create_form());
+  add_message_to_form();
+  
+//create dummy request to get a json object so you can create html fields for them
+  request_object_and_create_class_html_inputs();
+}
+
+
+function add_message_to_form(){
+  var message = document.createElement("div");
+  message.id = "message";
+  
+  document.getElementById("form").appendChild(message);
 }
 
 
@@ -239,12 +257,6 @@ function create_form(){
   var form = document.createElement("form");
   form.id = "form";
   form.action = "/" + get_selected_class_name().toLowerCase() + "/submit"
-  
-  var message = document.createElement("div");
-  message.id = "message";
-  
-  form.appendChild(message);
-  
   return form;
 }
 // creates HTML 
@@ -326,8 +338,8 @@ function do_something_to_all_this_object_parameters(obj, something) {
       }
   }
 }
-function remove_children_from_message(){
-  var myNode = document.getElementById("message");
+function remove_children(id){
+  var myNode = document.getElementById(id);
   while (myNode.firstChild) {
       myNode.removeChild(myNode.firstChild);
   }
@@ -353,12 +365,13 @@ function submit_form_using_ajax(event){
   
   request.addEventListener("loadstart", function(){
     show_loading_gif(document.getElementById("json-response"));
-    remove_children_from_message();
+    remove_children("message");
   });
   
   request.addEventListener("load", function(){
     var json = JSON.parse(this.response);
     if (json.errors.length == 0){
+      
       document.getElementById("json-response").innerHTML = this.response;
       var p = document.createElement("p");
       p.innerHTML = "Successfully added!"
@@ -369,6 +382,7 @@ function submit_form_using_ajax(event){
     else {
       var message = document.getElementById("message");
       document.getElementById("json-response").innerHTML = "";
+      
       for (i = 0; i < json.errors.length; i ++){
         var p = document.createElement("p");
         p.innerHTML = json.errors[i].message;
