@@ -33,7 +33,6 @@ class Assignment
     JOIN users ON users.id == collaborators.user_id
     WHERE collaborators.assignment_id = #{id};"
     rec = run_sql(query_string)
-    binding.pry
     if rec.blank?
       []
     else
