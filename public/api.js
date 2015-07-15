@@ -1,18 +1,45 @@
-// adds a loading gif to the contents div
+// Class variables - should be updated for each model
+///////////////////////////////////////////////////////////////////////////////////////
+// returns an Array of all the classes used in this API
 //
-// returns nothing
-function show_loading_gif(element) {
+// returns an Array
+function all_classes() {
+  return ["Assignment", "User", "Link", "Collaborator"]
+}
+
+
+// Elements to return used by other functions 
+//
+////////////////////////////////////////////////////////////////////////////////////
+
+// returns a loading gif image from assets
+//
+// returns gif Element
+function return_loading_gif() {
   var gif = document.createElement("img");
   gif.src = "/loading.gif";
   gif.setAttribute("id", "loading-gif");
   gif.setAttribute("height", "100");
   gif.setAttribute("margin", "auto");
-  element.innerHTML = "";
+  gif.id = "loading-gif";
+  return gif;
+}
+
+// returns the content div
+//
+// returns Element
+function return_content_div(){
+    return document.getElementById("contents");
+}
+
+// adds a loading gif to the contents div
+//
+// returns nothing
+function show_loading_gif(element) {
+  var gif = return_loading_gif();
   element.appendChild(gif);
   element.setAttribute("text-align", "center");
 }
-
-
 
 // toggles the class name for any number of elements
 //
@@ -26,56 +53,6 @@ function toggle_class_name(class_name, array_of_Elements) {
   }
 }
 
-// returns first Element with the passed classname
-//
-// returns an Element DOM object
-function get_first_of_this_class(class_name){
-  return document.getElementsByClassName(class_name)[0];
-}
-
-// the id of the container element is the id
-//
-// returns an Integer of the id
-function get_current_id() {
-  return get_first_of_this_class("container").id
-}
-
-
-// creates AJAX request to get the next record
-// adds event listener
-// sends request
-//
-// returns nothing
-function next_record(){
-  var next_record = new XMLHttpRequest(); 
-  next_record.open("get",("/product/next/" + get_current_id()));
-  next_record.addEventListener("load",change_HTML_for_object_response);
-  next_record.send();
-}
-
-// creates AJAX request to get the next record
-// adds event listener
-// sends request
-//
-// returns nothing
-function previous_record() {
-  var previous_record = new XMLHttpRequest(); 
-  previous_record.open("get",("/product/previous/" + get_current_id()));
-  previous_record.addEventListener("load",change_HTML_for_object_response);
-  previous_record.send();
-}
-
-// returns an Array of all the classes used in this API
-//
-// returns an Array
-function all_classes() {
-  return ["Assignment", "User", "Link", "Collaborator"]
-}
-
-function return_content_div(){
-    return document.getElementById("contents");
-}
-
 // returns the content div to which everything should be added
 //
 // returns a Div Element
@@ -83,6 +60,55 @@ function empty_and_return_content_div(){
   var content = return_content_div();
   content.innerHTML="";
   return content;
+}
+
+// insert an Element before this one
+//
+// newNode - Element
+// referenceNoce - Element
+//
+// returns nothing
+function insertBefore(newNode, referenceNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode);
+}
+
+
+function select_element_with_options_for_each_object() {
+  
+  var message = document.getElementById("message");
+  if (message != null){
+    message.innerHTML = "";
+  }
+  var request = new XMLHttpRequest();
+  request.open("get", get_url_this_class());
+  var content = return_content_div();
+  
+  var previous_select = document.getElementById("object-selector");
+  if (previous_select == null) {
+    request.addEventListener("loadstart", show_loading_gif(content));
+  }
+  else{
+    content.replaceChild(return_loading_gif(), previous_select);
+  }
+  
+  request.addEventListener("load", function(){
+    var s = document.createElement("select");
+    s.setAttribute("id", "object-selector");
+    s.style.fontSize = "100%";
+
+    var all_objects = JSON.parse(this.response);
+    for (i = 0; i < all_objects.length; i ++) {
+      object = all_objects[i];
+      var option = document.createElement("option");
+      option.innerHTML = object.name;
+      option.setAttribute("name", object.id)
+      s.appendChild(option);
+    }
+    var content = return_content_div();
+    content.replaceChild(s, document.getElementById("loading-gif"));
+
+  });
+  request.send();
 }
 
 // returns a select Element with options for each Class
@@ -138,12 +164,12 @@ function input_field(){
 // returns nothing
 function show_all_interface() {
   toggle_class_name("selected", [document.getElementById("show"), document.getElementsByClassName("selected")[0]]);
+
+  
+  var content = empty_and_return_content_div();
   var submit_all = document.createElement("button");
   submit_all.innerHTML = "Submit"
   submit_all.addEventListener("click", request_json_for_class_and_optional_id);
-  
-  var content = empty_and_return_content_div();
-
   content.appendChild(select_element_with_options_for_each_class());
   content.appendChild(input_field());
   content.appendChild(submit_all);
@@ -202,6 +228,24 @@ function request_json_for_class_and_optional_id(){
 }
 
 
+function request_json_to_delete(){
+  var request = new XMLHttpRequest();
+  request.open("get", get_url_from_class_and_optional_input_field());
+  request.addEventListener("loadstart", show_loading_gif(document.getElementById("json-response")));
+  request.addEventListener("load", function(){
+    var result = JSON.parse(this.response);
+    if (result.length > 0) {
+      document.getElementByid("message").innerHTML = "Successfully deleted.  Below, are the other objects."
+      document.getElementById("json-response").innerHTML = result;
+    }
+    else{
+      document.getElementByid("message").innerHTML = "Could not delete."
+    }
+    
+  })
+  request.send();
+}
+
 function request_object_and_create_class_html_inputs(){
   remove_children("form");
   add_message_to_form();
@@ -245,11 +289,30 @@ function create_or_update_interface(){
 }
 
 
-function add_message_to_form(){
+function delete_interface(){
+  toggle_class_name("selected", [document.getElementById("delete"), document.getElementsByClassName("selected")[0]]);
+  var content = empty_and_return_content_div();
+  var submit = document.createElement("button");
+  submit.id = "delete-button";
+  submit.innerHTML = "Click to delete"
+  // submit_all.addEventListener("click", select_element_with_options_for_each_object);
+
+  content.appendChild(select_element_with_options_for_each_class());
+  document.getElementById("class-name-selector").addEventListener("change", select_element_with_options_for_each_object);
+  select_element_with_options_for_each_object();
+  content.appendChild(submit);
+  content.appendChild(return_message());
+  content.appendChild(display_div_to_display_json());
+}
+
+function return_message(){
   var message = document.createElement("div");
   message.id = "message";
-  
-  document.getElementById("form").appendChild(message);
+  return message;
+}
+
+function add_message_to_form(){
+  document.getElementById("form").appendChild(return_message());
 }
 
 
@@ -402,10 +465,6 @@ window.onload = function(){
   document.getElementById("show").addEventListener("click", show_all_interface);
   
   document.getElementById("create-or-update").addEventListener("click", create_or_update_interface);
-
+  document.getElementById("delete").addEventListener("click", delete_interface);
   
-  var all = document.getElementsByClassName("tab");
-  for (i = 0; i < all.length; i ++){
-    all[i].addEventListener("click", display_this_one_and_hide_current);
-  }
 }
