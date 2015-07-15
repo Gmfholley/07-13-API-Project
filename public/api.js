@@ -124,7 +124,7 @@ function input_field(){
   input.setAttribute("type", "text");
   input.setAttribute("name", "id");
   input.setAttribute("id", "input-id");
-  input.setAttribute("default", "Type in an optional id number here.");
+  input.setAttribute("placeholder", "Type in an optional id number here.");
   return input;
 }
 
@@ -196,7 +196,7 @@ function create_or_update_interface(){
 //create dummy request to get a json object so you can create html fields for them
   
   var request = new XMLHttpRequest();
-  request.open("get", get_url_this_class() + "/1");
+  request.open("get", get_url_this_class() + "/0");
   request.responseType = "json";
   request.addEventListener("load", function(){
     json_object = this.response;
@@ -206,7 +206,7 @@ function create_or_update_interface(){
     
     var submit_all = document.createElement("button");
     submit_all.innerHTML = "Submit"
-    submit_all.addEventListener("click", request_json_for_class_and_optional_id);
+    submit_all.addEventListener("click", submit_form_using_ajax);
     
     content.appendChild(submit_all);
     content.appendChild(display_div_to_display_json());
@@ -219,7 +219,8 @@ function create_or_update_interface(){
 
 function create_form(){
   var form = document.createElement("form");
-  form.setAttribute("id", "form");
+  form.id = "form";
+  form.action = "/" + get_selected_class_name().toLowerCase() + "/submit"
   return form;
 }
 // creates HTML 
@@ -232,9 +233,12 @@ function create_HTML_for_object_response(object, property){
   label.innerHTML = property + ":";
   var input = document.createElement("input");
   input.setAttribute("type", "text");
-  input.setAttribute("name", property);
+  input.setAttribute("name", 'create_form[' + property + ']');
   input.setAttribute("id", property);
-  input.setAttribute("value", object[property]);
+  if (object[property] != null) {
+    input.setAttribute("value", object[property]);
+  }
+  
   input.setAttribute("placeholder", "Type in the " + property);
   p.appendChild(label);
   p.appendChild(input);
@@ -275,7 +279,7 @@ function change_HTML_to_match_parameter(obj, class_name){
 // returns nothing
 function do_something_to_all_this_object_parameters(obj, something) {
   for (var property in obj) {
-      if (obj.hasOwnProperty(property) && property!="id" && obj[property].constructor != Array) {
+      if (property!="id" && (obj[property] == null || obj[property].constructor != Array)) {
         something(obj, property);
       }
   }
@@ -317,8 +321,7 @@ window.onload = function(){
   document.getElementById("show").addEventListener("click", show_all_interface);
   
   document.getElementById("create-or-update").addEventListener("click", create_or_update_interface);
-  
-  document.getElementById("AJAX-submit").addEventListener("click", submit_form_using_ajax)
+
   
   var all = document.getElementsByClassName("tab");
   for (i = 0; i < all.length; i ++){
