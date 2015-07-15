@@ -125,6 +125,8 @@ function input_field(){
   input.setAttribute("name", "id");
   input.setAttribute("id", "input-id");
   input.setAttribute("placeholder", "Type in an optional id number here.");
+  input.setAttribute('size',input.getAttribute('placeholder').length);
+  input.setAttribute("font-size", "100%");
   return input;
 }
 
@@ -240,6 +242,8 @@ function create_HTML_for_object_response(object, property){
   }
   
   input.setAttribute("placeholder", "Type in the " + property);
+  input.setAttribute('size',input.getAttribute('placeholder').length);
+  input.setAttribute("font-size", "100%");
   p.appendChild(label);
   p.appendChild(input);
   
