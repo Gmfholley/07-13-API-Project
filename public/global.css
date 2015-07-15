@@ -1,6 +1,6 @@
 * {
   box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 
@@ -167,6 +167,59 @@ footer {
   text-transform: capitalize;
 }
 
+.api-response {
+  font-family: 'Source Sans Pro', sans-serif;
+  color: #2a2a2a;
+  width: 60vw;
+  height: 300px;
+  background: white;
+  overflow: auto;
+  line-height: 1.2em;
+  text-align: left;
+
+  -moz-user-select: text;
+  -webkit-user-select: text;
+  -ms-user-select: text;
+
+}
+
+.container {
+  margin: 10px;
+}
+
+.margin-left {
+  margin-left: 20px;
+}
+
+.left {
+  float: left;
+}
+
+.hide {
+  display: none;
+}
+
+.tab {
+  position: relative;
+  top: 1px;
+  width: 150px;
+}
+
+.grey {
+    background: #e4e4e4;
+}
+
+.border {
+  border: #545454 1px solid;
+}
+
+.selected {
+  position: relative;
+  top: 1px;
+  border-bottom-color: #e4e4e4;
+}
+
+
 @media (min-width: 800px) {
   #pop-up-menu {
     height: auto;
@@ -187,3 +240,4 @@ footer {
     float: left;
   }
 }
+
