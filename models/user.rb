@@ -23,7 +23,11 @@ class User
     WHERE collaborators.user_id = #{id};"
     
     rec = run_sql(query_string)
-    Assignment.as_objects(rec)
+    if rec.blank?
+      []
+    else
+      Assignment.as_objects(rec)
+    end
   end
   
   # returns a Boolean indicating if there are any collaborators

@@ -33,7 +33,12 @@ class Assignment
     JOIN users ON users.id == collaborators.user_id
     WHERE collaborators.assignment_id = #{id};"
     rec = run_sql(query_string)
-    User.as_objects(rec)
+    binding.pry
+    if rec.blank?
+      []
+    else
+      User.as_objects(rec)
+    end
   end
   
   # get the Array of Collaborator objects for this Assignment
