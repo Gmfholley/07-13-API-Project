@@ -199,11 +199,14 @@ function request_json_for_class_and_optional_id(){
 }
 
 
+
+
 function create_or_update_interface(){
   toggle_class_name("selected", [this, document.getElementsByClassName("selected")[0]]);
   var content = empty_and_return_content_div();
 
   content.appendChild(select_element_with_options_for_each_class());
+  document.getElementById("class-name-selector").addEventListener("change", create_or_update_interface)
   content.appendChild(input_field());
   var submit = document.createElement("button");
   submit.innerHTML = "Get Record"
@@ -212,7 +215,6 @@ function create_or_update_interface(){
   
   content.appendChild(create_form());
 //create dummy request to get a json object so you can create html fields for them
-  
   var request = new XMLHttpRequest();
   request.open("get", get_url_this_class() + "/0");
   request.responseType = "json";
@@ -230,8 +232,6 @@ function create_or_update_interface(){
     content.appendChild(display_div_to_display_json());
   });
   request.send();
-  
-  // break up the appends here so you can add the
 }
 
 
@@ -326,7 +326,12 @@ function do_something_to_all_this_object_parameters(obj, something) {
       }
   }
 }
-
+function remove_children_from_message(){
+  var myNode = document.getElementById("message");
+  while (myNode.firstChild) {
+      myNode.removeChild(myNode.firstChild);
+  }
+}
 
 function submit_form_using_ajax(event){
   event.preventDefault();
@@ -347,8 +352,8 @@ function submit_form_using_ajax(event){
   request.open("get", url);
   
   request.addEventListener("loadstart", function(){
-    show_loading_gif();
-    document.getElementById("message").innerHTML = "";
+    show_loading_gif(document.getElementById("json-response"));
+    remove_children_from_message();
   });
   
   request.addEventListener("load", function(){
@@ -363,11 +368,12 @@ function submit_form_using_ajax(event){
     }
     else {
       var message = document.getElementById("message");
+      document.getElementById("json-response").innerHTML = "";
       for (i = 0; i < json.errors.length; i ++){
         var p = document.createElement("p");
-        p.innerHTML = json.errors[i];
+        p.innerHTML = json.errors[i].message;
         document.getElementById("message").appendChild(p);
-        document.getElementById("json-response") = "";
+
       }
     }
     
