@@ -135,7 +135,6 @@ module DatabaseConnector
     # returns an Array of hashes
     def where_match(field_name, field_value, relationship)
       result = run_sql("SELECT * FROM #{table_name} WHERE #{field_name} #{relationship} #{add_quotes_if_string(field_value)};")
-      binding.pry
       if result.blank? or result.is_a? SQLite3::SQLException
         []
       else
