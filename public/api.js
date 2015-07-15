@@ -20,10 +20,9 @@ function show_loading_gif(element) {
 // also accepts an optional number of elements, comma-separated that the first line puts into an Array called args
 //
 // returns nothing
-function toggle_class_name(class_name) {
-  var args = Array.prototype.slice.call(arguments, 1);
-  for (i = 0;  i < args.length; i++){
-    args[i].classList.toggle(class_name);
+function toggle_class_name(class_name, array_of_Elements) {
+  for (i = 0;  i < array_of_Elements.length; i++){
+    array_of_Elements[i].classList.toggle(class_name);
   }
 }
 
@@ -135,7 +134,7 @@ function input_field(){
 //
 // returns nothing
 function show_all_interface() {
-  
+  toggle_class_name("selected", [document.getElementById("show"), document.getElementsByClassName("selected")[0]]);
   var submit_all = document.createElement("button");
   submit_all.innerHTML = "Submit"
   submit_all.addEventListener("click", request_json_for_class_and_optional_id);
@@ -176,6 +175,19 @@ function get_url_this_class(){
 // creates a JSON request to request either all or a specific object for the class selected in the drop down
 //
 // returns nothing
+function request_json_and_fill_in_object_fields(){
+    var request = new XMLHttpRequest();
+    var url = get_url_from_class_and_optional_input_field();
+    
+    request.open("get", url);
+    request.addEventListener("loadstart", show_loading_gif(document.getElementById("json-response")));
+    request.addEventListener("load", change_HTML_for_object_response);
+    request.send();
+}
+
+// creates a JSON request to request either all or a specific object for the class selected in the drop down
+//
+// returns nothing
 function request_json_for_class_and_optional_id(){
     var request = new XMLHttpRequest();
     request.open("get", get_url_from_class_and_optional_input_field());
@@ -188,11 +200,15 @@ function request_json_for_class_and_optional_id(){
 
 
 function create_or_update_interface(){
-  
+  toggle_class_name("selected", [this, document.getElementsByClassName("selected")[0]]);
   var content = empty_and_return_content_div();
 
   content.appendChild(select_element_with_options_for_each_class());
   content.appendChild(input_field());
+  var submit = document.createElement("button");
+  submit.innerHTML = "Get Record"
+  submit.addEventListener("click", request_json_and_fill_in_object_fields);
+  content.appendChild(submit);
   
   content.appendChild(create_form());
 //create dummy request to get a json object so you can create html fields for them
@@ -223,6 +239,12 @@ function create_form(){
   var form = document.createElement("form");
   form.id = "form";
   form.action = "/" + get_selected_class_name().toLowerCase() + "/submit"
+  
+  var message = document.createElement("div");
+  message.id = "message";
+  
+  form.appendChild(message);
+  
   return form;
 }
 // creates HTML 
@@ -258,21 +280,37 @@ function create_HTML_for_object_response(object, property){
 //
 // returns nothing
 function change_HTML_for_object_response(){
-  console.log(this.response);
   var n = JSON.parse(this.response);
-  get_first_of_this_class("container-id").innerHTML=("Product #:" + n["id"]);
+  
+  document.getElementById("json-response").innerHTML = this.response;
   do_something_to_all_this_object_parameters(n, change_HTML_to_match_parameter);
-  document.getElementById(get_current_id()).id = n["id"];
+  
 }
 
 // changes the HTML of the Element of this class to this object's parameter of same name
 //
 // obj - Object
-// class_name - String of the object's parameter and matching class_name to change to save
+// parameter - String of the object's parameter and matching element id to change to save
 //
 // returns nothing
-function change_HTML_to_match_parameter(obj, class_name){
-  get_first_of_this_class(class_name).innerHTML=obj[class_name];
+function change_HTML_to_match_parameter(obj, parameter){
+  var element = document.getElementById(parameter);
+  if (element != null) {
+    element.value = obj[parameter];
+  }
+}
+
+// changes the HTML of the Element of this class to this object's parameter of same name
+//
+// obj - Object
+// parameter - String of the object's parameter and matching element id to change to save
+//
+// returns nothing
+function clear_HTML_field(obj, parameter){
+  var element = document.getElementById(parameter);
+  if (element != null) {
+    element.value = "";
+  }
 }
 
 // do something to this object's parameters
@@ -301,6 +339,7 @@ function submit_form_using_ajax(event){
      var e = form.elements[i];
      kvpairs.push(e.name + "=" + e.value);
   }
+  kvpairs.push("create_form[id]=" + document.getElementById("input-id").value);
   var queryString = kvpairs.join("&");
   
   var url = "/api" + form.getAttribute("action") + "?" + queryString;
@@ -308,12 +347,30 @@ function submit_form_using_ajax(event){
   request.open("get", url);
   
   request.addEventListener("loadstart", function(){
-    alert("Starting!");
+    show_loading_gif();
+    document.getElementById("message").innerHTML = "";
   });
   
   request.addEventListener("load", function(){
-    alert(this.response);
-    console.log(this.response);
+    var json = JSON.parse(this.response);
+    if (json.errors.length == 0){
+      document.getElementById("json-response").innerHTML = this.response;
+      var p = document.createElement("p");
+      p.innerHTML = "Successfully added!"
+      document.getElementById("message").appendChild(p);
+      do_something_to_all_this_object_parameters(json, clear_HTML_field);
+      document.getElementById("input-id").value = "";
+    }
+    else {
+      var message = document.getElementById("message");
+      for (i = 0; i < json.errors.length; i ++){
+        var p = document.createElement("p");
+        p.innerHTML = json.errors[i];
+        document.getElementById("message").appendChild(p);
+        document.getElementById("json-response") = "";
+      }
+    }
+    
   });
   
   request.send(queryString);
