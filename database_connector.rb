@@ -230,8 +230,12 @@ module DatabaseConnector
   def self_hash
     hash = {}
     hash["id"] = self.send("id")
-    display_fields.each do |var|
-      hash[var] = self.send(var)
+    database_field_names.each do |var|
+      if self.send(var).is_a? ForeignKey
+        hash[var] = self.send(var).id
+      else
+        hash[var] = self.send(var)
+      end
     end
     hash
   end
