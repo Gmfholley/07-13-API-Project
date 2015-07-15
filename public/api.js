@@ -196,13 +196,17 @@ function create_or_update_interface(){
 //create dummy request to get a json object so you can create html fields for them
   
   var request = new XMLHttpRequest();
-  request.open("get", get_url_this_class() + "/0");
+  request.open("get", get_url_this_class() + "/1");
   request.responseType = "json";
   request.addEventListener("load", function(){
     json_object = this.response;
     
-    do_something_to_all_this_object_parameters(json_object, create_HTML_for_object)
+    do_something_to_all_this_object_parameters(json_object, create_HTML_for_object_response);
     
+    
+    var submit_all = document.createElement("button");
+    submit_all.innerHTML = "Submit"
+    submit_all.addEventListener("click", request_json_for_class_and_optional_id);
     
     content.appendChild(submit_all);
     content.appendChild(display_div_to_display_json());
@@ -222,13 +226,20 @@ function create_form(){
 //
 // returns nothing
 function create_HTML_for_object_response(object, property){
+  var p = document.createElement("p");
+  var label = document.createElement("label");
+  label.htmlFor = property;
+  label.innerHTML = property + ":";
   var input = document.createElement("input");
   input.setAttribute("type", "text");
   input.setAttribute("name", property);
   input.setAttribute("id", property);
   input.setAttribute("value", object[property]);
-  input.setAttribute("default", "Type in the " + property);
-  document.getElementById("form").appendChild(input);
+  input.setAttribute("placeholder", "Type in the " + property);
+  p.appendChild(label);
+  p.appendChild(input);
+  
+  document.getElementById("form").appendChild(p);
 }
 
 
@@ -264,7 +275,7 @@ function change_HTML_to_match_parameter(obj, class_name){
 // returns nothing
 function do_something_to_all_this_object_parameters(obj, something) {
   for (var property in obj) {
-      if (obj.hasOwnProperty(property) && property!="id") {
+      if (obj.hasOwnProperty(property) && property!="id" && obj[property].constructor != Array) {
         something(obj, property);
       }
   }
@@ -305,6 +316,7 @@ window.onload = function(){
   
   document.getElementById("show").addEventListener("click", show_all_interface);
   
+  document.getElementById("create-or-update").addEventListener("click", create_or_update_interface);
   
   document.getElementById("AJAX-submit").addEventListener("click", submit_form_using_ajax)
   
