@@ -1,5 +1,11 @@
+get "/api" do
+  home_menu_nav_variables
+  erb :api
+end
+
 get "/api/assignments" do
   @assignments = Assignment.all_hash
+  sleep 3
   json @assignments
 end
 
