@@ -26,3 +26,8 @@ end
 get "/login/forgot" do
   "I'm sorry.  I don't know enough about authentication to help you.  Create a new account."
 end
+
+get "/logout" do
+  session.clear
+  redirect "/home"
+end
