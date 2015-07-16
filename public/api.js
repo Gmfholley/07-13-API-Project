@@ -230,16 +230,17 @@ function request_json_for_class_and_optional_id(){
 
 function request_json_to_delete(){
   var request = new XMLHttpRequest();
-  request.open("get", get_url_from_class_and_optional_input_field());
+  request.open("get", "/api/" + get_selected_class_name().toLowerCase() + "/delete/" + document.getElementById("object-selector").selectedOptions[0].getAttribute("name"));
   request.addEventListener("loadstart", show_loading_gif(document.getElementById("json-response")));
   request.addEventListener("load", function(){
     var result = JSON.parse(this.response);
     if (result.length > 0) {
-      document.getElementByid("message").innerHTML = "Successfully deleted.  Below, are the other objects."
-      document.getElementById("json-response").innerHTML = result;
+      document.getElementById("message").innerHTML = "Successfully deleted.  Below, are the other objects.";
+      document.getElementById("json-response").innerHTML = this.response;
     }
     else{
-      document.getElementByid("message").innerHTML = "Could not delete."
+      document.getElementById("message").innerHTML = "Could not delete.";
+      document.getElementById("json-response").innerHTML = "";
     }
     
   })
@@ -295,7 +296,7 @@ function delete_interface(){
   var submit = document.createElement("button");
   submit.id = "delete-button";
   submit.innerHTML = "Click to delete"
-  // submit_all.addEventListener("click", select_element_with_options_for_each_object);
+  submit.addEventListener("click", request_json_to_delete);
 
   content.appendChild(select_element_with_options_for_each_class());
   document.getElementById("class-name-selector").addEventListener("change", select_element_with_options_for_each_object);
