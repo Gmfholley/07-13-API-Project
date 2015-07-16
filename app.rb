@@ -6,7 +6,8 @@ require 'sinatra'                # gem that handles html views & controller
 require 'sinatra/reloader'       # reloads sinatra without reloading
 require 'sinatra/json'           # converts to JSON
 require 'active_support'         # all kinds of goodies! including blank?, underscore, humanize, pluralize
-require 'httparty'
+require 'httparty'               # allows you to bind your ip address and allow others on the same network to access your server using a request
+require 'bcrypt'                 # encrypts your software
 
 require 'active_support/core_ext/string/filters.rb'
 require 'active_support/core_ext/object/blank.rb'
@@ -15,6 +16,7 @@ require 'active_support/inflector.rb'
 
 # set your ip address here
 # set :bind, '192.168.1.69'
+set :sessions, true # sets sessions in Sinatra to true, they are false by default
 
 
 # Database set up modules and helper classes required by models
@@ -42,7 +44,9 @@ require_relative 'controllers/menu_controller.rb'
 require_relative 'controllers/create_controller.rb'
 require_relative 'controllers/local_variable_methods.rb'
 require_relative 'controllers/api_controller.rb'
+require_relative 'controllers/login_controller.rb'
 require_relative 'controllers/main_controller.rb'
+
 
 # views are in views folder
 
