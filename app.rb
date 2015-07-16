@@ -43,6 +43,7 @@ require_relative 'controllers/defined_menus.rb'
 require_relative 'controllers/menu_controller.rb'
 require_relative 'controllers/create_controller.rb'
 require_relative 'controllers/local_variable_methods.rb'
+require_relative 'controllers/login_helper.rb'
 require_relative 'controllers/api_controller.rb'
 require_relative 'controllers/login_controller.rb'
 require_relative 'controllers/main_controller.rb'
@@ -50,4 +51,5 @@ require_relative 'controllers/main_controller.rb'
 
 # views are in views folder
 
-helpers DefinedMenus, MenuController, CreateController, ERBVariableMethods
+helpers DefinedMenus, MenuController, CreateController, ERBVariableMethods, LoginHelper
+
