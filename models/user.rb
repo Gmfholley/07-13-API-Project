@@ -1,11 +1,14 @@
 class User
   include DatabaseConnector
   
-  attr_reader :id, :name, :errors
+  attr_reader :id, :name, :errors, :email, :password, :password_in_english
   
   def initialize(args={})
     @id = args[:id] || args["id"]
     @name = args[:name] || args["name"]
+    @password = args[:password] || args["password"]
+    @email = args[:email] || args["email"]
+    @password_in_english = args[:password_in_english] || args["password_in_english"]
     @errors = []
     post_initialize
   end
