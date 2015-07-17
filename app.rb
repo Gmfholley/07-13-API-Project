@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'bundler/setup'
+
 require 'date'                   # ruby's built-in date function
 require 'chronic'                # gem that parses date/time
 require 'sqlite3'                # gem that handles database

@@ -21,6 +21,11 @@ gem 'bcrypt', '3.1.10'                 # encrypts your software
 # $ bundle install
 # $ git add Gemfile Gemfile.lock
 
+### Then require rubygems and bundler/setup in your app.rb
+
+# require 'rubygems'
+# require 'bundler/setup'
+
 
 # for Sinatra
 
