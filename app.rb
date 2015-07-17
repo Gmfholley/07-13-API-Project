@@ -21,6 +21,9 @@ require 'active_support/inflector.rb'
 # set :bind, '192.168.1.69'
 set :sessions, true # sets sessions in Sinatra to true, they are false by default
 
+configure :development do
+  ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: 'assignments.db')
+end
 
 # Database set up modules and helper classes required by models
 
