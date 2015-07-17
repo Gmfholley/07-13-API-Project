@@ -3,7 +3,6 @@ require 'bundler/setup'
 
 require 'date'                   # ruby's built-in date function
 require 'chronic'                # gem that parses date/time
-require 'sqlite3'                # gem that handles database
 require 'pry'                    # gem that handles debugging
 require 'sinatra'                # gem that handles html views & controller
 require 'sinatra/reloader'       # reloads sinatra without reloading
@@ -22,11 +21,13 @@ require 'active_support/inflector.rb'
 set :sessions, true # sets sessions in Sinatra to true, they are false by default
 
 configure :development do
+  require 'sqlite3'
   ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: 'assignments.db')
 end
 
 ## Sinatra specific 
-configure :production do  
+configure :production do
+  require 'pg'
   db = URI.parse(ENV['DATABASE_URL'])
 
   ActiveRecord::Base.establish_connection(
