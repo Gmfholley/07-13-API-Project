@@ -19,26 +19,26 @@ require 'active_support/inflector.rb'
 # set your ip address here
 # set :bind, '192.168.1.69'
 set :sessions, true # sets sessions in Sinatra to true, they are false by default
-
-configure :development do
-  require 'sqlite3'
-  ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: 'assignments.db')
-end
-
-## Sinatra specific 
-configure :production do
-  require 'pg'
-  db = URI.parse(ENV['DATABASE_URL'])
-
-  ActiveRecord::Base.establish_connection(
-    :adapter => db.scheme == 'postgres' ? 'postgresql' : db.scheme,
-    :host     => db.host,
-    :username => db.user,
-    :password => db.password,
-    :database => db.path[1..-1],
-    :encoding => 'utf8'
-  )
-end
+#
+# configure :development do
+#   require 'sqlite3'
+#   ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: 'assignments.db')
+# end
+#
+# ## Sinatra specific
+# configure :production do
+#   require 'pg'
+#   db = URI.parse(ENV['DATABASE_URL'])
+#
+#   ActiveRecord::Base.establish_connection(
+#     :adapter => db.scheme == 'postgres' ? 'postgresql' : db.scheme,
+#     :host     => db.host,
+#     :username => db.user,
+#     :password => db.password,
+#     :database => db.path[1..-1],
+#     :encoding => 'utf8'
+#   )
+# end
 
 # Database set up modules and helper classes required by models
 

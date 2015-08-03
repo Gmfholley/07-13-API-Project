@@ -77,7 +77,7 @@ end
 get "/api/:class_name/submit" do
   current_user
   class_variable(params["class_name"])
-  @m = @class_name.new(params["create_form"])
+  @m = @class_name.new(params["return_form"])
   @m.save_record
   hash = @m.self_hash
   hash["errors"] = @m.errors  

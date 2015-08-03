@@ -2,7 +2,6 @@
 source "https://rubygems.org"
 
 # gem "rails"
-gem 'ruby'
 gem 'chronic', '0.10.2'                 # gem that parses date/time
 gem 'pry', '0.10.1'                    # gem that handles debugging
 gem 'sinatra', '1.4.6'                # gem that handles html views & controller
